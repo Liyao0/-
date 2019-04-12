@@ -1,0 +1,55 @@
+import java.util.Random;
+
+
+public class TestHongBao {
+
+
+    public static void main(String[] args) {
+        HongBao h = new HongBao(20,16);
+        Thread t = new Thread(h);
+        t.start();
+    }
+
+    public static class HongBao implements Runnable {
+        int people;
+        int i;
+
+        float money = 100;//红包金额
+
+        public HongBao(int people, int i) {
+            this.people = people;
+            this.i = i;
+        }
+
+        @Override
+
+        public void run() {
+
+            for (; i > 0; i--, people--) {
+                while (true) {
+                    float robMoney = new Random().nextFloat() * (int) money - i;//随机生成的小数
+                    float r = (float) (robMoney - robMoney % 0.01);//把它保留到小数点后两位
+                    synchronized (this) {
+                        if (r > 0) {
+                            if (i == 1) {
+                                System.out.println("第" + (21 - people) + "为用户抢到了" + (money - (money % 0.01)));
+                                System.out.println("有" + (people - i) + "位用户没有抢到");
+                                break;
+                            }
+                            System.out.println("第" + (21 - people) + "为用户抢到了" + r);
+
+                            money -= r;
+
+
+                            break;
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    }}
